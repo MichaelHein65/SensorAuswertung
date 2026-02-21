@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sensor Panorama</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-shape bg-shape-a"></div>
+  <div class="bg-shape bg-shape-b"></div>
+  <main class="app-shell">
+    <header class="hero reveal">
+      <p class="eyebrow">Sensor-Auswertung</p>
+      <h1>Raumklima als visuelle Story</h1>
+      <p class="hero-sub">Live aus <code>Sensordaten.txt</code> mit Fokus auf Tages- bis Jahresansicht.</p>
+      <div id="status" class="status">Lade Daten...</div>
+    </header>
+
+    <section class="panel controls reveal">
+      <div class="mode-switch" role="tablist" aria-label="Zeitraum">
+        <button class="mode-btn active" data-mode="day">Tag</button>
+        <button class="mode-btn" data-mode="week">Woche</button>
+        <button class="mode-btn" data-mode="month">Monat</button>
+        <button class="mode-btn" data-mode="year">Jahr</button>
+      </div>
+
+      <div class="date-nav">
+        <button id="stepBack" class="ghost-btn" aria-label="Zurück">&#9664;</button>
+        <div>
+          <p class="label">Angezeigter Zeitraum</p>
+          <p id="rangeLabel" class="range-label">-</p>
+        </div>
+        <button id="stepForward" class="ghost-btn" aria-label="Vor">&#9654;</button>
+      </div>
+
+      <div class="quick-picks" id="quickPicks"></div>
+
+      <div class="range-row">
+        <label for="customRange">Oder frei wählen</label>
+        <input id="customRange" placeholder="Zeitraum wählen" />
+      </div>
+
+      <div class="metric-row" id="metricRow">
+        <button class="metric-chip active" data-metric="temperature">Temperatur</button>
+        <button class="metric-chip active" data-metric="humidity">Luftfeuchte</button>
+        <button class="metric-chip active" data-metric="pressure">Druck</button>
+      </div>
+
+      <div class="axis-controls" id="axisControls">
+        <div class="axis-head">
+          <p class="label">Y-Achsen anpassen</p>
+          <button id="resetAxes" class="ghost-btn" type="button">Default</button>
+        </div>
+        <div class="axis-grid">
+          <div class="axis-card">
+            <p>Temperatur (°C)</p>
+            <div class="axis-row">
+              <input id="temperatureMin" type="number" step="0.1" />
+              <span>bis</span>
+              <input id="temperatureMax" type="number" step="0.1" />
+            </div>
+          </div>
+          <div class="axis-card">
+            <p>Luftfeuchte (%)</p>
+            <div class="axis-row">
+              <input id="humidityMin" type="number" step="0.1" />
+              <span>bis</span>
+              <input id="humidityMax" type="number" step="0.1" />
+            </div>
+          </div>
+          <div class="axis-card">
+            <p>Druck (hPa)</p>
+            <div class="axis-row">
+              <input id="pressureMin" type="number" step="0.1" />
+              <span>bis</span>
+              <input id="pressureMax" type="number" step="0.1" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="kpi-grid" id="kpiGrid"></section>
+
+    <section class="panel reveal">
+      <div class="chart-head">
+        <div>
+          <p class="label">Trendkurve</p>
+          <h2 id="chartTitle">Messwerte</h2>
+        </div>
+      </div>
+      <div id="chart" class="chart"></div>
+      <div class="focus-row">
+        <div class="focus-head">
+          <p class="label">Datum im Fokus</p>
+          <p id="focusDate">-</p>
+        </div>
+        <div class="focus-controls">
+          <button id="focusPrev" class="ghost-btn">-1</button>
+          <input id="focusSlider" type="range" min="0" max="0" value="0" />
+          <button id="focusNext" class="ghost-btn">+1</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel info reveal">
+      <p><strong>Hinweis:</strong> Bei fehlendem Datenzugriff lokal im Projektordner ausführen: <code>python3 -m http.server 8080</code> und dann <code>http://localhost:8080</code> öffnen.</p>
+      <p>Update der Quelldatei vom PiZero: <code>./scripts/sync_data.sh</code></p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
