@@ -14,6 +14,7 @@ Produktiv wird diese Datei per Sync vom PiZero aktualisiert.
 - Freier Zeitraum per Date-Range-Picker
 - KPI-Karten (letzter Wert, Mittel, Min, Max)
 - Interaktive Zeitreihe mit Zoom + Tooltip
+- Automatisches Nachladen der Daten alle 30 Sekunden (ohne manuellen Seiten-Reload)
 - Sichtbarkeit einzelner Werte umschaltbar (Temperatur/Feuchte/Druck)
 - Dynamische Y-Achsen-Zuordnung (rechte Achse passt sich sichtbaren Werten an)
 - Einstellbare Y-Achsenbereiche mit Browser-Persistenz (`localStorage`)
@@ -37,6 +38,11 @@ python3 -m http.server 8080
 Dann im Browser:
 
 - `http://localhost:8080`
+
+Hinweis:
+
+- Die App muss ueber HTTP laufen (nicht per `file://`).
+- Bei Layout-/Datenproblemen: Hard-Reload im Browser ausfuehren.
 
 ## Betrieb auf Pi5
 

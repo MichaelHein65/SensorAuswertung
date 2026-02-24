@@ -95,6 +95,20 @@ Optional danach Browser-Hard-Reload ausfuehren (Cache leeren).
 - hat Datei neue Zeilen?
 - passt ausgewaehlter Zeitraum?
 
+"App zeigt nichts":
+
+- URL pruefen: `http://<pi5-ip>:8080` oder `http://localhost:8080`
+- nicht per `file://` oeffnen
+- Browser-Hard-Reload ausfuehren (Cache leeren)
+- HTTP-Test direkt auf Pi5:
+
+```bash
+curl -I http://127.0.0.1:8080
+curl -I http://127.0.0.1:8080/data/Sensordaten.txt
+```
+
+- App laedt Daten alle 30 Sekunden automatisch nach; wenn neue Daten nicht erscheinen, Sync-Quelle pruefen (Abschnitt 3/4)
+
 Sync laeuft nicht:
 
 - `crontab -l` pruefen

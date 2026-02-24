@@ -1,9 +1,11 @@
 const { DateTime, Settings } = luxon;
 Settings.defaultLocale = "de";
 const AXIS_STORAGE_KEY = "sensor-panorama-axis-ranges-v1";
+const AUTO_REFRESH_MS = 30_000;
 
 const state = {
   rawData: [],
+  isLoading: false,
   visibleMetrics: new Set(["temperature", "humidity", "pressure"]),
   mode: "day",
   anchorDate: DateTime.local().startOf("day"),
@@ -465,23 +467,30 @@ function refresh() {
 }
 
 async function loadData() {
+  if (state.isLoading) return;
+  state.isLoading = true;
+
   try {
     const res = await fetch("./data/Sensordaten.txt", { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const content = await res.text();
+    const hadDataBefore = state.rawData.length > 0;
     state.rawData = parseData(content);
+
+    if (state.rawData.length) {
+      const latest = state.rawData.at(-1).dt;
+      if (!hadDataBefore) {
+        state.anchorDate = latest.startOf("day");
+      }
+    }
   } catch (err) {
     console.error(err);
     setStatus("Daten konnten nicht geladen werden. Starte lokalen Server oder synchronisiere die Datei neu.", "error");
     state.rawData = [];
+  } finally {
+    refresh();
+    state.isLoading = false;
   }
-
-  if (state.rawData.length) {
-    const latest = state.rawData.at(-1).dt;
-    state.anchorDate = latest.startOf("day");
-  }
-
-  refresh();
 }
 
 function initControls() {
@@ -571,3 +580,4 @@ renderQuickPicks();
 syncModeButtons();
 initControls();
 loadData();
+setInterval(loadData, AUTO_REFRESH_MS);
